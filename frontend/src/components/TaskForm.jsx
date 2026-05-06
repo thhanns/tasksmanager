@@ -6,6 +6,7 @@ export default function TaskForm({ task, onSubmit, onClose }) {
   const [form, setForm] = useState(defaultForm);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   useEffect(() => {
     if (task) {
@@ -14,6 +15,11 @@ export default function TaskForm({ task, onSubmit, onClose }) {
       setForm(defaultForm);
     }
   }, [task]);
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(onClose, 200);
+  };
 
   const validate = () => {
     const errs = {};
@@ -36,7 +42,7 @@ export default function TaskForm({ task, onSubmit, onClose }) {
     setSubmitting(true);
     try {
       await onSubmit(form);
-      onClose();
+      handleClose();
     } catch (err) {
       setErrors({ submit: err.response?.data?.message || 'Failed to save task' });
     } finally {
@@ -45,13 +51,23 @@ export default function TaskForm({ task, onSubmit, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-all duration-200 ${
+        closing ? 'opacity-0' : 'animate-fade-in'
+      }`}
+      onClick={handleClose}
+    >
+      <div
+        className={`bg-white rounded-2xl shadow-2xl w-full max-w-md transition-all duration-300 ${
+          closing ? 'opacity-0 scale-95 translate-y-4' : 'animate-slide-up'
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             {task ? 'Edit Task' : 'New Task'}
           </h2>
-          <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg">
+          <button onClick={handleClose} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:rotate-90">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -60,7 +76,7 @@ export default function TaskForm({ task, onSubmit, onClose }) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {errors.submit && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600 animate-shake">
               {errors.submit}
             </div>
           )}
@@ -116,7 +132,7 @@ export default function TaskForm({ task, onSubmit, onClose }) {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+            <button type="button" onClick={handleClose} className="btn-secondary flex-1">
               Cancel
             </button>
             <button type="submit" disabled={submitting} className="btn-primary flex-1">

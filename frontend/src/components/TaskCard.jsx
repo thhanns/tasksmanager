@@ -1,17 +1,31 @@
+import { useState } from 'react';
+
 const statusConfig = {
   todo: { label: 'To Do', color: 'bg-amber-100 text-amber-800', dot: 'bg-amber-500' },
-  'in-progress': { label: 'In Progress', color: 'bg-blue-100 text-blue-800', dot: 'bg-blue-500' },
+  'in-progress': { label: 'In Progress', color: 'bg-blue-100 text-blue-800', dot: 'bg-blue-500 animate-pulse-dot' },
   done: { label: 'Done', color: 'bg-green-100 text-green-800', dot: 'bg-green-500' },
 };
 
-export default function TaskCard({ task, onEdit, onDelete }) {
+export default function TaskCard({ task, onEdit, onDelete, index = 0 }) {
   const status = statusConfig[task.status];
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await new Promise((r) => setTimeout(r, 300));
+    onDelete(task._id);
+  };
 
   return (
-    <div className="card p-4 hover:shadow-md transition-shadow">
+    <div
+      className={`card p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 opacity-0 animate-fade-in-up group ${
+        isDeleting ? 'animate-slide-out' : ''
+      }`}
+      style={{ animationDelay: `${index * 0.06}s`, animationFillMode: 'forwards' }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h3 className={`text-sm font-semibold text-gray-900 ${task.status === 'done' ? 'line-through text-gray-500' : ''}`}>
+          <h3 className={`text-sm font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors ${task.status === 'done' ? 'line-through text-gray-500 group-hover:text-gray-500' : ''}`}>
             {task.title}
           </h3>
           {task.description && (
@@ -21,7 +35,7 @@ export default function TaskCard({ task, onEdit, onDelete }) {
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={() => onEdit(task)}
-            className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+            className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
             title="Edit"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,8 +43,8 @@ export default function TaskCard({ task, onEdit, onDelete }) {
             </svg>
           </button>
           <button
-            onClick={() => onDelete(task._id)}
-            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={handleDelete}
+            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 hover:scale-110 active:scale-95"
             title="Delete"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

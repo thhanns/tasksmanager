@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from 'react';
+
 const statConfig = [
   { key: 'total', label: 'Total Tasks', color: 'bg-gray-100 text-gray-600', iconColor: 'text-gray-500' },
   { key: 'todo', label: 'To Do', color: 'bg-amber-50 text-amber-700', iconColor: 'text-amber-500' },
@@ -28,19 +30,52 @@ const icons = {
   ),
 };
 
+function AnimatedCounter({ value }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const target = value || 0;
+    if (target === 0) { setDisplay(0); return; }
+
+    const duration = 400;
+    const start = performance.now();
+    const startVal = display;
+
+    const tick = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(startVal + (target - startVal) * eased));
+      if (progress < 1) ref.current = requestAnimationFrame(tick);
+    };
+
+    ref.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(ref.current);
+  }, [value]);
+
+  return <span className="animate-count-up inline-block">{display}</span>;
+}
+
 export default function StatsCards({ stats }) {
   if (!stats) return null;
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {statConfig.map(({ key, label, color, iconColor }) => (
-        <div key={key} className={`card p-4 ${color}`}>
+      {statConfig.map(({ key, label, color, iconColor }, i) => (
+        <div
+          key={key}
+          className={`card p-4 ${color} hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 opacity-0 animate-fade-in-up`}
+          style={{ animationDelay: `${i * 0.08}s`, animationFillMode: 'forwards' }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium opacity-80">{label}</p>
-              <p className="text-2xl font-bold mt-1">{stats[key] || 0}</p>
+              <p className="text-2xl font-bold mt-1">
+                <AnimatedCounter value={stats[key]} />
+              </p>
             </div>
-            <div className={iconColor}>{icons[key]}</div>
+            <div className={`${iconColor} transition-transform duration-300 hover:scale-110`}>{icons[key]}</div>
           </div>
         </div>
       ))}

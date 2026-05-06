@@ -21,9 +21,9 @@ export default function TaskFilters({ filters, onFilterChange }) {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3">
-      <div className="relative flex-1">
+      <div className="relative flex-1 group">
         <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 transition-colors duration-200 group-focus-within:text-indigo-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -43,10 +43,10 @@ export default function TaskFilters({ filters, onFilterChange }) {
           <button
             key={s.value}
             onClick={() => onFilterChange({ status: s.value, page: 1 })}
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 active:scale-95 ${
               filters.status === s.value
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-[1.03]'
+                : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
             }`}
           >
             {s.label}

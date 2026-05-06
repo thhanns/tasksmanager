@@ -17,7 +17,7 @@ export default function Pagination({ pagination, onPageChange }) {
   }
 
   return (
-    <div className="flex items-center justify-between px-2 py-3">
+    <div className="flex items-center justify-between px-2 py-3 animate-fade-in">
       <p className="text-sm text-gray-500">
         Showing {(page - 1) * pagination.limit + 1} to{' '}
         {Math.min(page * pagination.limit, pagination.total)} of {pagination.total} tasks
@@ -26,7 +26,7 @@ export default function Pagination({ pagination, onPageChange }) {
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page === 1}
-          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-90"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -36,8 +36,10 @@ export default function Pagination({ pagination, onPageChange }) {
           <button
             key={p}
             onClick={() => onPageChange(p)}
-            className={`w-8 h-8 rounded-lg text-sm font-medium ${
-              p === page ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+            className={`w-8 h-8 rounded-lg text-sm font-medium transition-all duration-200 active:scale-90 ${
+              p === page
+                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-110'
+                : 'text-gray-600 hover:bg-gray-100 hover:scale-105'
             }`}
           >
             {p}
@@ -46,7 +48,7 @@ export default function Pagination({ pagination, onPageChange }) {
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page === totalPages}
-          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-90"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

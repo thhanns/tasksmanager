@@ -53,19 +53,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <>
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-20 lg:hidden animate-fade-in"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:transform-none ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-all duration-300 ease-out lg:transform-none ${
+          sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 transition-transform duration-300 hover:scale-105 hover:rotate-3">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
@@ -84,10 +84,10 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 end={item.to === '/dashboard'}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-indigo-50 text-indigo-700'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-indigo-50 text-indigo-700 shadow-sm shadow-indigo-100 scale-[1.02]'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 hover:pl-4'
                   }`
                 }
               >
@@ -99,7 +99,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
           <div className="border-t border-gray-200 p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 bg-indigo-100 rounded-full flex items-center justify-center">
+              <div className="w-9 h-9 bg-indigo-100 rounded-full flex items-center justify-center transition-transform duration-200 hover:scale-110">
                 <span className="text-sm font-semibold text-indigo-600">
                   {user?.name?.charAt(0)?.toUpperCase()}
                 </span>
@@ -111,7 +111,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all duration-200 active:scale-[0.98]"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
